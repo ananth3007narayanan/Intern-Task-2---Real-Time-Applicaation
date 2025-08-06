@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!-- saved from url=(0067)file:///C:/Users/anant/OneDrive/Desktop/HTML/index.html/index.html? -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <title>Real-Time Chat</title>
+    <style>
+        body { font-family: Arial; background: #f0f0f0; padding: 20px; }
+        #messages { list-style-type: none; padding: 0; max-height: 300px; overflow-y: scroll; }
+        #messages li { padding: 8px; background: #fff; margin-bottom: 4px; border-radius: 4px; }
+        #chat-form { display: flex; }
+        #message { flex: 1; padding: 10px; }
+        #send { padding: 10px; }
+    </style>
+</head>
+<body>
+    <h2>Real-Time Chat</h2>
+    <ul id="messages"></ul>
+    <form id="chat-form">
+        <input id="message" autocomplete="off" placeholder="Type a message...">
+        <button id="send">Send</button>
+    </form>
+
+    <script src="file:///C:/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const form = document.getElementById('chat-form');
+        const input = document.getElementById('message');
+        const messages = document.getElementById('messages');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (input.value) {
+                socket.emit('chat message', input.value);
+                input.value = '';
+            }
+        });
+
+        socket.on('chat message', (msg) => {
+            const item = document.createElement('li');
+            item.textContent = msg;
+            messages.appendChild(item);
+            messages.scrollTop = messages.scrollHeight;
+        });
+    </script>
+
+</body></html>
